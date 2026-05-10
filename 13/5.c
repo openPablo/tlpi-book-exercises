@@ -5,12 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+int get_lowest_offset(int total_offset, int filesize) {
+  if (abs(total_offset) > filesize) {
+    return -filesize;
+  }
+  return total_offset;
+}
 int main(int argc, char *argv[]) {
-  int step_size = 10;
-  int fd, i, filesize, MAX_LINES, cur_offset = 0, linecount = 0;
+  int step_size = 1024;
+  int MAX_LINES, fd, i, filesize, total_offset, cur_offset = 0, linecount = 0;
   char buf[step_size];
   ssize_t nbytes;
-  int total_offset = -step_size;
 
   if (argc != 3 || (strcmp(argv[1], "--help") == 0)) {
     printf("Usage: %s <nr_of_lines> <file_path>\n", argv[0]);
@@ -22,6 +27,7 @@ int main(int argc, char *argv[]) {
   }
   MAX_LINES = atoi(argv[1]);
   filesize = lseek(fd, 0, SEEK_END);
+  total_offset = get_lowest_offset(-step_size, filesize);
   lseek(fd, total_offset, SEEK_END);
 
   while ((linecount < MAX_LINES) && total_offset < filesize) {
@@ -35,10 +41,7 @@ int main(int argc, char *argv[]) {
       }
       cur_offset--;
     }
-    total_offset -= step_size;
-    if (abs(total_offset) > filesize) {
-      total_offset = filesize;
-    }
+    total_offset = get_lowest_offset(total_offset - step_size, filesize);
     lseek(fd, total_offset, SEEK_END);
   }
   lseek(fd, cur_offset, SEEK_END);
