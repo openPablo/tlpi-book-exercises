@@ -49,5 +49,6 @@ int main(int argc, char *argv[]) {
   while ((nbytes = read(fd, buf, step_size)) > 0) {
     write(STDOUT_FILENO, buf, nbytes);
   }
+  close(fd);
   exit(EXIT_SUCCESS);
 }
