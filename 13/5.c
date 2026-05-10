@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 
   while ((linecount < MAX_LINES) && total_offset < filesize) {
     read(fd, buf, step_size);
-    for (int i = 0; i < step_size; i++) {
+    for (int i = step_size - 1; i >= 0; i--) {
       if (buf[i] == '\n') {
         linecount++;
         if (linecount == 11) {
