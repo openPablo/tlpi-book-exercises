@@ -1,0 +1,4 @@
+1a) performance is better with a buffer size the same as my filesystem, diminishing returns afterwards
+b) slightly slower because changes have to be flushed to disk
+
+3)fflush flushes c library buffers to the OS, fsync flushes OS buffers to disk
